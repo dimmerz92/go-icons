@@ -16,10 +16,14 @@ jobs:
         shell: bash
         run: |
           SINCE=$(date -u -d "24 hours ago" +"%Y-%m-%dT%H:%M:%SZ")
-          COMMITS=$(curl -s "https://api.github.com/repos/simple-icons/simple-icons/commits?since=$SINCE&path=icons")
+          COMMITS=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/simple-icons/simple-icons/commits?since=$SINCE&path=icons")
           FOUND=false
           for SHA in $(echo "$COMMITS" | jq -r '.[].sha'); do
-            FILES=$(curl -s "https://api.github.com/repos/simple-icons/simple-icons/commits/$SHA")
+            FILES=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/simple-icons/simple-icons/commits/$SHA")
             MATCH=$(echo "$FILES" | jq '[.files[] | select(
               (.filename | endswith(".svg")) and (.status == "added" or .status == "modified")
             )] | length')
