@@ -10,11 +10,6 @@ import (
 	"github.com/dimmerz92/go-icons/internal"
 )
 
-// key=library, value[0]=icons path in cloned repo, value[1]=path in current repo
-var supportedLibraries = map[string][]string{
-	"lucide": {"./lucide-repo/icons", "./lucide"},
-}
-
 func main() {
 	if len(os.Args) != 2 {
 		fmt.Println("error: usage: sync <library>")
@@ -22,11 +17,11 @@ func main() {
 	}
 
 	library := os.Args[1]
-	paths, ok := supportedLibraries[library]
+	paths, ok := internal.SupportedLibraries[library]
 	if !ok {
 		fmt.Printf(
 			"error: unsupported library [%s], use any of: %v\n",
-			library, slices.Collect(maps.Keys(supportedLibraries)),
+			library, slices.Collect(maps.Keys(internal.SupportedLibraries)),
 		)
 		os.Exit(1)
 	}
