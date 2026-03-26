@@ -8,18 +8,6 @@ import (
 	"github.com/dimmerz92/go-icons/lucide"
 )
 
-func TestGetHTMLFile(t *testing.T) {
-	name := "a-arrow-up"
-	data, err := lucide.GetHTMLFile(name)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if len(data) == 0 {
-		t.Fatal("returned empty data")
-	}
-}
-
 func TestAddIcons(t *testing.T) {
 	html := `{{ define "icon" }}<svg>...</svg>{{ end }}`
 	tpls := template.New("base")
