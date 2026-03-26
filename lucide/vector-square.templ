@@ -1,0 +1,27 @@
+package icons
+
+templ VectorSquare(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M19.5 7a24 24 0 0 1 0 10"></path>
+		<path d="M4.5 7a24 24 0 0 0 0 10"></path>
+		<path d="M7 19.5a24 24 0 0 0 10 0"></path>
+		<path d="M7 4.5a24 24 0 0 1 10 0"></path>
+		<rect x="17" y="17" width="5" height="5" rx="1"></rect>
+		<rect x="17" y="2" width="5" height="5" rx="1"></rect>
+		<rect x="2" y="17" width="5" height="5" rx="1"></rect>
+		<rect x="2" y="2" width="5" height="5" rx="1"></rect>
+	</svg>
+}
