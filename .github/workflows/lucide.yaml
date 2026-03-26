@@ -1,4 +1,4 @@
-name: sync
+name: sync-lucide
 
 on:
   schedule:
