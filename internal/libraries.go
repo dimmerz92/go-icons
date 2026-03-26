@@ -5,11 +5,13 @@ import (
 	"io/fs"
 
 	"github.com/dimmerz92/go-icons/lucide"
+	simpleicons "github.com/dimmerz92/go-icons/simple-icons"
 )
 
 // key=library, value[0]=icons path in cloned repo, value[1]=path in current repo
 var SupportedLibraries = map[string][]string{
-	"lucide": {"./lucide-repo/icons", "./lucide"},
+	"lucide":       {"./lucide-repo/icons", "./lucide"},
+	"simple-icons": {"./simple-icons-repo/icons", "./simple-icons"},
 }
 
 var SupportedFormats = map[string]struct{}{
@@ -18,7 +20,8 @@ var SupportedFormats = map[string]struct{}{
 }
 
 var IconEmbeds = map[string]embed.FS{
-	"lucide": lucide.Templates,
+	"lucide":       lucide.Templates,
+	"simple-icons": simpleicons.Templates,
 }
 
 // GetHTMLFile returns the contents of the given html icon file.

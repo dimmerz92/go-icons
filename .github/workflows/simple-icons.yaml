@@ -1,0 +1,78 @@
+name: sync-simple-icons
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  simple-icons-check:
+    runs-on: ubuntu-latest
+    outputs:
+      new: ${{ steps.new-commits.outputs.new }}
+    steps:
+      - name: Check if any new svg icons added to simple-icons repo
+        id: new-commits
+        shell: bash
+        run: |
+          SINCE=$(date -u -d "24 hours ago" +"%Y-%m-%dT%H:%M:%SZ")
+          COMMITS=$(curl -s "https://api.github.com/repos/simple-icons/simple-icons/commits?since=$SINCE&path=icons")
+          FOUND=false
+          for SHA in $(echo "$COMMITS" | jq -r '.[].sha'); do
+            FILES=$(curl -s "https://api.github.com/repos/simple-icons/simple-icons/commits/$SHA")
+            MATCH=$(echo "$FILES" | jq '[.files[] | select(
+              (.filename | endswith(".svg")) and (.status == "added" or .status == "modified")
+            )] | length')
+            if [ "$MATCH" -gt 0 ]; then
+              FOUND=true
+            fi
+          done
+          echo "new=$FOUND" >> $GITHUB_OUTPUT
+
+  simple-icons-sync:
+    runs-on: ubuntu-latest
+    needs: simple-icons-check
+    if: ${{ needs.simple-icons-check.outputs.new == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: ./go.mod
+
+      - name: Sparse clone simple-icons
+        run: |
+          git clone --depth 1 --no-checkout https://github.com/simple-icons/simple-icons simple-icons-repo
+          cd simple-icons-repo
+          git sparse-checkout init --cone
+          git sparse-checkout set icons
+          git checkout develop
+
+      - name: Process new simple-icons
+        id: sync
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          go install github.com/a-h/templ/cmd/templ@latest
+          go run ./cmd/sync/main.go simple-icons
+          rm -rf ./simple-icons-repo
+          templ fmt ./simple-icons
+          templ generate
+          git add .
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "ci: sync with simple-icons repo"
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Submit PR for new simple-icons
+        if: ${{ steps.sync.outputs.changes == 'true' }}
+        uses: peter-evans/create-pull-request@v8
+        with:
+          title: "[ci] simple-icons sync"
+          labels: ci,sync
+          branch: sync
+          assignees: dimmerz92

@@ -1,0 +1,14 @@
+package icons
+
+templ Vercel(attrs ...templ.Attributes) {
+	<svg
+		role="img"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<title>Vercel</title><path d="m12 1.608 12 20.784H0Z"></path>
+	</svg>
+}
