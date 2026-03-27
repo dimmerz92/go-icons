@@ -167,3 +167,24 @@ templ MyIcon(attrs ...templ.Attributes) {
 		t.Fatalf("wanted\n%s\n\ngot\n%s", want, string(got))
 	}
 }
+
+func TestNonAlphaPrefixer(t *testing.T) {
+	tests := []struct {
+		name     string
+		value    string
+		expected string
+	}{
+		{name: "empty string"},
+		{name: "no prefix", value: "test", expected: "test"},
+		{name: "prefix from numeric", value: "0test", expected: "T0test"},
+		{name: "prefix from symbol", value: "-test", expected: "T-test"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := internal.NonAlphaPrefixer(test.value); got != test.expected {
+				t.Errorf("expected %s, got %s", test.expected, got)
+			}
+		})
+	}
+}

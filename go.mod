@@ -3,6 +3,7 @@ module github.com/dimmerz92/go-icons
 go 1.26.1
 
 require (
+	github.com/a-h/templ v0.3.1001
 	github.com/fatih/color v1.19.0
 	golang.org/x/text v0.35.0
 )

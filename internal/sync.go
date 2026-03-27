@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -19,7 +20,7 @@ const HTML_TEMPLATE = `{{ define "%s" }}
   %s
 {{ end }}`
 
-const TEMPL_TEMPLATE = `package icons
+const TEMPL_TEMPLATE = `package %s
 
 templ %s(attrs ...templ.Attributes) {
 	%s
@@ -80,6 +81,17 @@ func KebabToPascal(v string) (string, error) {
 	return b.String(), nil
 }
 
+// NonAlphaPrefixer prefixes the given string with T if it starts with a non alphanumeric character.
+func NonAlphaPrefixer(v string) string {
+	if len(v) < 1 || unicode.IsLetter(rune(v[0])) {
+		return v
+	}
+
+	v = "T" + v
+
+	return v
+}
+
 // ToHTML embeds the 'svg' into a html template and saves it as 'name' to the 'outputPath'.
 func ToHTML(name, svg, outputPath string) error {
 	svgParts := strings.SplitN(svg, ">", 2)
@@ -87,24 +99,28 @@ func ToHTML(name, svg, outputPath string) error {
 		return fmt.Errorf("malformed svg file")
 	}
 
-	template := fmt.Appendf([]byte{}, HTML_TEMPLATE, name, strings.TrimSpace(svgParts[0]), strings.TrimSpace(svgParts[1]))
+	template := fmt.Appendf([]byte{}, HTML_TEMPLATE,
+		name, strings.TrimSpace(svgParts[0]), strings.TrimSpace(svgParts[1]),
+	)
 
 	return os.WriteFile(filepath.Join(outputPath, name+".html"), template, 0600)
 }
 
 // ToTempl embeds the 'svg' into a templ template and saves it as 'name' to the 'outputPath'.
-func ToTempl(name, svg, outputPath string) error {
+func ToTempl(library, name, svg, outputPath string) error {
 	svgParts := strings.SplitN(svg, ">", 2)
 	if len(svgParts) != 2 {
 		return fmt.Errorf("malformed svg file")
 	}
 
-	fname, err := KebabToPascal(name)
+	fname, err := KebabToPascal(NonAlphaPrefixer(name))
 	if err != nil {
 		return err
 	}
 
-	template := fmt.Appendf([]byte{}, TEMPL_TEMPLATE, fname, strings.TrimSpace(svgParts[0]), strings.TrimSpace(svgParts[1]))
+	template := fmt.Appendf([]byte{}, TEMPL_TEMPLATE,
+		strings.ReplaceAll(library, "-", ""), fname, strings.TrimSpace(svgParts[0]), strings.TrimSpace(svgParts[1]),
+	)
 
 	return os.WriteFile(filepath.Join(outputPath, name+".templ"), template, 0600)
 }
