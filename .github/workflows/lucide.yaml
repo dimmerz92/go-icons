@@ -58,6 +58,8 @@ jobs:
           go install github.com/a-h/templ/cmd/templ@latest
           go run ./cmd/sync/main.go lucide
           rm -rf ./lucide-repo
+          templ fmt lucide
+          templ generate
           git add .
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "ci: sync with lucide icons repo"

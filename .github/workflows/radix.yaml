@@ -58,6 +58,8 @@ jobs:
           go install github.com/a-h/templ/cmd/templ@latest
           go run ./cmd/sync/main.go radix-icons
           rm -rf ./radix-icons-repo
+          templ fmt radix-icons
+          templ generate
           git add .
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "ci: sync with radix icons repo"
