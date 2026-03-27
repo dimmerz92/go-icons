@@ -139,7 +139,7 @@ func TestToTempl(t *testing.T) {
   <g></g>
 </svg>
 `
-	want := `package icons
+	want := `package lucide
 
 templ MyIcon(attrs ...templ.Attributes) {
 	<svg
@@ -153,7 +153,7 @@ templ MyIcon(attrs ...templ.Attributes) {
 
 	tmp := t.TempDir()
 
-	err := internal.ToTempl("my-icon", test, tmp)
+	err := internal.ToTempl("lucide", "my-icon", test, tmp)
 	if err != nil {
 		t.Fatalf("failed to write templ icon: %v", err)
 	}
