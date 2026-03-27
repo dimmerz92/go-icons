@@ -1,0 +1,15 @@
+package material
+
+templ Pause_two_tone_24px(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		height="24"
+		viewBox="0 0 24 24"
+		width="24"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M0 0h24v24H0V0z" fill="none"></path><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path>
+	</svg>
+}

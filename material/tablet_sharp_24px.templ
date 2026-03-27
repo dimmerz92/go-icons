@@ -1,0 +1,15 @@
+package material
+
+templ Tablet_sharp_24px(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		height="24"
+		viewBox="0 0 24 24"
+		width="24"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M0 0h24v24H0V0z" fill="none"></path><path d="M23 4H1v16h21.99L23 4zm-4 14H5V6h14v12z"></path>
+	</svg>
+}

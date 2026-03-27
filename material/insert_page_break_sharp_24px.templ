@@ -1,0 +1,16 @@
+package material
+
+templ Insert_page_break_sharp_24px(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		enable-background="new 0 0 24 24"
+		height="24"
+		viewBox="0 0 24 24"
+		width="24"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<g><rect fill="none" height="24" width="24"></rect></g><g><g><rect height="5" width="16" x="4" y="17"></rect><path d="M20,8l-6-6H4.01l-0.01,9H20V8z M13,9V3.5L18.5,9H13z"></path><rect height="2" width="6" x="9" y="13"></rect><rect height="2" width="6" x="17" y="13"></rect><rect height="2" width="6" x="1" y="13"></rect></g></g>
+	</svg>
+}

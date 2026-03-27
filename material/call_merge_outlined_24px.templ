@@ -1,0 +1,15 @@
+package material
+
+templ Call_merge_outlined_24px(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		height="24"
+		viewBox="0 0 24 24"
+		width="24"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M0 0h24v24H0V0z" fill="none"></path><path d="M17 20.41L18.41 19 15 15.59 13.59 17 17 20.41zM7.5 8H11v5.59L5.59 19 7 20.41l6-6V8h3.5L12 3.5 7.5 8z"></path>
+	</svg>
+}

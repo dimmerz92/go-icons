@@ -1,0 +1,15 @@
+package material
+
+templ Fiber_manual_record_rounded_24px(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		height="24"
+		viewBox="0 0 24 24"
+		width="24"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<circle cx="12" cy="12" r="8"></circle>
+	</svg>
+}

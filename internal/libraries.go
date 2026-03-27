@@ -6,6 +6,7 @@ import (
 
 	"github.com/dimmerz92/go-icons/ionicons"
 	"github.com/dimmerz92/go-icons/lucide"
+	"github.com/dimmerz92/go-icons/material"
 	radixicons "github.com/dimmerz92/go-icons/radix-icons"
 	simpleicons "github.com/dimmerz92/go-icons/simple-icons"
 )
@@ -16,6 +17,7 @@ var SupportedLibraries = map[string][]string{
 	"simple-icons": {"./simple-icons-repo/icons", "./simple-icons"},
 	"radix-icons":  {"./radix-icons-repo/packages/radix-icons/icons", "./radix-icons"},
 	"ionicons":     {"./ionicons-repo/src/svg", "./ionicons"},
+	"material":     {"./material-repo/packages/mui-icons-material/material-icons", "./material"},
 }
 
 var SupportedFormats = map[string]struct{}{
@@ -28,6 +30,7 @@ var IconEmbeds = map[string]embed.FS{
 	"simple-icons": simpleicons.Templates,
 	"radix-icons":  radixicons.Templates,
 	"ionicons":     ionicons.Templates,
+	"material":     material.Templates,
 }
 
 // GetHTMLFile returns the contents of the given html icon file.
