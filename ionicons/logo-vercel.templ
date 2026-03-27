@@ -1,0 +1,13 @@
+package ionicons
+
+templ LogoVercel(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 512 512"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path fill-rule="evenodd" d="M256,48,496,464H16Z"></path>
+	</svg>
+}

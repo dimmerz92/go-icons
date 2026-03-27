@@ -1,0 +1,15 @@
+package ionicons
+
+templ SquareSharp(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="512"
+		height="512"
+		viewBox="0 0 512 512"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<rect x="48" y="48" width="416" height="416"></rect>
+	</svg>
+}
