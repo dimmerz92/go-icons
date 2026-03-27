@@ -29,9 +29,9 @@ jobs:
           done
           echo "new=$FOUND" >> $GITHUB_OUTPUT
 
-  icons-sync:
+  radix-sync:
     runs-on: ubuntu-latest
-    needs: icons-check
+    needs: radix-check
     if: ${{ needs.icons-check.outputs.new == 'true' }}
     steps:
       - uses: actions/checkout@v6
