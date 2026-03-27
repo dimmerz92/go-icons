@@ -1,0 +1,16 @@
+package radixicons
+
+templ Slash(attrs ...templ.Attributes) {
+	<svg
+		width="15"
+		height="15"
+		viewBox="0 0 15 15"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M5.46033 14H4.10779L9.46521 1H10.8177L5.46033 14Z" fill="currentColor"></path>
+	</svg>
+}
