@@ -6,13 +6,13 @@ Simply use the command line utility to install individual icons into your projec
 
 ## Icon Libraries
 
-| Icon Library                                                 | License                                                                         |
-|--------------------------------------------------------------|---------------------------------------------------------------------------------|
-| [Ionicons](https://github.com/ionic-team/ionicons)           | [MIT](https://github.com/ionic-team/ionicons/blob/main/LICENSE)                 |
-| [Lucide Icons](https://github.com/lucide-icons/lucide)       | [ISC](https://github.com/lucide-icons/lucide/blob/main/LICENSE)                 |
-| [Material Icons](https://github.com/mui/material-ui)         | [MIT](https://github.com/mui/material-ui/blob/master/LICENSE)                   |
-| [Radix Icons](https://github.com/radix-ui/icons)          | [MIT](https://github.com/radix-ui/icons/blob/main/LICENSE)                      |
-| [Simple Icons](https://github.com/simple-icons/simple-icons) | [CC0 1.0](https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md) |
+| Icon Library | Version | License |
+| - | - | - |
+| [Ionicons](https://github.com/ionic-team/ionicons) | ![Ionicons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.ionicons&style=flat-square&label=) | [MIT](https://github.com/ionic-team/ionicons/blob/main/LICENSE) |
+| [Lucide Icons](https://github.com/lucide-icons/lucide) | ![Lucide Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.lucide&style=flat-square&label=) | [ISC](https://github.com/lucide-icons/lucide/blob/main/LICENSE) |
+| [Material Icons](https://github.com/mui/material-ui) | ![Material Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.material&style=flat-square&label=) | [MIT](https://github.com/mui/material-ui/blob/master/LICENSE) |
+| [Radix Icons](https://github.com/radix-ui/icons) | ![Radix Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.radix&style=flat-square&label=) | [MIT](https://github.com/radix-ui/icons/blob/main/LICENSE) |
+| [Simple Icons](https://github.com/simple-icons/simple-icons) | ![Simple Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.simpleIcons&style=flat-square&label=) | [CC0 1.0](https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md) |
 
 ## Installation & Usage
 
