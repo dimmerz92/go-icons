@@ -61,6 +61,9 @@ jobs:
           templ fmt lucide
           templ generate
           git add .
+          TAG=$(curl -s https://api.github.com/repos/lucide-icons/lucide/releases/latest | jq -r '.tag_name')
+          CLEAN_TAG=$(echo $TAG | sed 's/[^0-9.]//g')
+          jq --arg v "$CLEAN_TAG" '.lucide = $v' versions.json > tmp.json && mv tmp.json versions.json
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "ci: sync with lucide icons repo"
             echo "changes=true" >> $GITHUB_OUTPUT

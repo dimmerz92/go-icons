@@ -60,6 +60,9 @@ jobs:
           rm -rf ./simple-icons-repo
           templ fmt ./simple-icons
           templ generate
+          TAG=$(curl -s https://api.github.com/repos/simple-icons/simple-icons/releases/latest | jq -r '.tag_name')
+          CLEAN_TAG=$(echo $TAG | sed 's/[^0-9.]//g')
+          jq --arg v "$CLEAN_TAG" '.simpleIcons = $v' versions.json > tmp.json && mv tmp.json versions.json
           git add .
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "ci: sync with simple-icons repo"

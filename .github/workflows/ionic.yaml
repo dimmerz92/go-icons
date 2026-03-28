@@ -60,6 +60,9 @@ jobs:
           rm -rf ./ionicons-repo
           templ fmt ionicons
           templ generate
+          TAG=$(curl -s https://api.github.com/repos/ionic-team/ionicons/releases/latest | jq -r '.tag_name')
+          CLEAN_TAG=$(echo $TAG | sed 's/[^0-9.]//g')
+          jq --arg v "$CLEAN_TAG" '.ionicons = $v' versions.json > tmp.json && mv tmp.json versions.json
           git add .
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "ci: sync with ionic icons repo"
