@@ -9,25 +9,28 @@ jobs:
   lucide-check:
     runs-on: ubuntu-latest
     outputs:
-      new: ${{ steps.new-commits.outputs.new }}
+      new: ${{ steps.check.outputs.new }}
+      tag: ${{ steps.release.outputs.tag }}
     steps:
-      - name: Check if any new svg icons added to lucide icons repo
-        id: new-commits
-        shell: bash
+      - uses: actions/checkout@v6
+
+      - name: Get latest release tag
+        id: release
         run: |
-          SINCE=$(date -u -d "24 hours ago" +"%Y-%m-%dT%H:%M:%SZ")
-          COMMITS=$(curl -s "https://api.github.com/repos/lucide-icons/lucide/commits?since=$SINCE&path=icons")
-          FOUND=false
-          for SHA in $(echo "$COMMITS" | jq -r '.[].sha'); do
-            FILES=$(curl -s "https://api.github.com/repos/lucide-icons/lucide/commits/$SHA")
-            MATCH=$(echo "$FILES" | jq '[.files[] | select(
-              (.filename | endswith(".svg")) and (.status == "added" or .status == "modified")
-            )] | length')
-            if [ "$MATCH" -gt 0 ]; then
-              FOUND=true
-            fi
-          done
-          echo "new=$FOUND" >> $GITHUB_OUTPUT
+          TAG=$(curl -s https://api.github.com/repos/lucide-icons/lucide/releases/latest | jq -r '.tag_name')
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Check if new release
+        id: check
+        run: |
+          CURRENT=$(jq -r ".lucide" versions.json)
+          LATEST=${{ steps.release.outputs.tag }}
+          CLEAN=$(echo $LATEST | sed 's/[^0-9.]//g')
+          if [[ "$CURRENT" != "$CLEAN" ]]; then
+            echo "new=true" >> $GITHUB_OUTPUT
+          else
+            echo "new=false" >> $GITHUB_OUTPUT
+          fi
 
   lucide-sync:
     runs-on: ubuntu-latest
@@ -44,11 +47,10 @@ jobs:
 
       - name: Sparse clone lucide icons
         run: |
-          git clone --depth 1 --no-checkout https://github.com/lucide-icons/lucide lucide-repo
+          git clone --depth 1 --branch ${{ needs.lucide-check.outputs.tag }} https://github.com/lucide-icons/lucide lucide-repo
           cd lucide-repo
           git sparse-checkout init --cone
           git sparse-checkout set icons
-          git checkout main
 
       - name: Process new lucide icons
         id: sync
@@ -63,6 +65,7 @@ jobs:
           git add .
           TAG=$(curl -s https://api.github.com/repos/lucide-icons/lucide/releases/latest | jq -r '.tag_name')
           CLEAN_TAG=$(echo $TAG | sed 's/[^0-9.]//g')
+          CLEAN_TAG=$(echo "${{ needs.lucide-check.outputs.tag }}" | sed 's/[^0-9.]//g')
           jq --arg v "$CLEAN_TAG" '.lucide = $v' versions.json > tmp.json && mv tmp.json versions.json
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "ci: sync with lucide icons repo"
