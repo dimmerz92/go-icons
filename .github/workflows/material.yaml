@@ -9,25 +9,28 @@ jobs:
   material-check:
     runs-on: ubuntu-latest
     outputs:
-      new: ${{ steps.new-commits.outputs.new }}
+      new: ${{ steps.check.outputs.new }}
+      tag: ${{ steps.release.outputs.tag }}
     steps:
-      - name: Check if any new svg icons added to material icons repo
-        id: new-commits
-        shell: bash
+      - uses: actions/checkout@v6
+
+      - name: Get latest release tag
+        id: release
         run: |
-          SINCE=$(date -u -d "24 hours ago" +"%Y-%m-%dT%H:%M:%SZ")
-          COMMITS=$(curl -s "https://api.github.com/repos/mui/material-ui/commits?since=$SINCE&path=packages/mui-icons-material/material-icons")
-          FOUND=false
-          for SHA in $(echo "$COMMITS" | jq -r '.[].sha'); do
-            FILES=$(curl -s "https://api.github.com/repos/mui/material-ui/commits/$SHA")
-            MATCH=$(echo "$FILES" | jq '[.files[] | select(
-              (.filename | endswith(".svg")) and (.status == "added" or .status == "modified")
-            )] | length')
-            if [ "$MATCH" -gt 0 ]; then
-              FOUND=true
-            fi
-          done
-          echo "new=$FOUND" >> $GITHUB_OUTPUT
+          TAG=$(curl -s https://api.github.com/repos/mui/material-ui/releases/latest | jq -r '.tag_name')
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Check if new release
+        id: check
+        run: |
+          CURRENT=$(jq -r ".material" versions.json)
+          LATEST=${{ steps.release.outputs.tag }}
+          CLEAN=$(echo $LATEST | sed 's/[^0-9.]//g')
+          if [[ "$CURRENT" != "$CLEAN" ]]; then
+            echo "new=true" >> $GITHUB_OUTPUT
+          else
+            echo "new=false" >> $GITHUB_OUTPUT
+          fi
 
   material-sync:
     runs-on: ubuntu-latest
@@ -44,11 +47,10 @@ jobs:
 
       - name: Sparse clone material icons
         run: |
-          git clone --depth 1 --no-checkout https://github.com/mui/material-ui material-repo
+          git clone --depth 1 --branch ${{ needs.material-check.outputs.tag }} https://github.com/mui/material-ui material-repo
           cd material-repo
           git sparse-checkout init --cone
           git sparse-checkout set packages/mui-icons-material/material-icons
-          git checkout master
 
       - name: Process new material icons
         id: sync
@@ -60,8 +62,7 @@ jobs:
           rm -rf ./material-repo
           templ fmt material
           templ generate
-          TAG=$(curl -s https://api.github.com/repos/mui/material-ui/releases/latest | jq -r '.tag_name')
-          CLEAN_TAG=$(echo $TAG | sed 's/[^0-9.]//g')
+          CLEAN_TAG=$(echo "${{ needs.material-check.outputs.tag }}" | sed 's/[^0-9.]//g')
           jq --arg v "$CLEAN_TAG" '.material = $v' versions.json > tmp.json && mv tmp.json versions.json
           git add .
           if [ -n "$(git status --porcelain)" ]; then
