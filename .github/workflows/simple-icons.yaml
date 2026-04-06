@@ -25,7 +25,7 @@ jobs:
         run: |
           CURRENT=$(jq -r ".simpleIcons" versions.json)
           LATEST=${{ steps.release.outputs.tag }}
-          CLEAN=$(echo $LATEST | sed `s/[^0-9.]//g`)
+          CLEAN=$(echo $LATEST | sed 's/[^0-9.]//g')
           if [[ "$CURRENT" != "$CLEAN" ]]; then
             echo "new=true" >> $GITHUB_OUTPUT
           else
