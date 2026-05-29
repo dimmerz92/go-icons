@@ -118,7 +118,7 @@ go install github.com/dimmerz92/go-icons/cmd/go-icons@latest
 **Usage**
 
 > [!NOTE]
-> The command follows a simple model of `go-lucide <LIBRARY>:<FORMAT> <ICON NAME> [OPTIONS]`
+> The command follows a simple model of `go-icons <LIBRARY>:<FORMAT> <ICON NAME> [OPTIONS]`
 >
 > LIBRARIES: [simple-icons radix-icons ionicons material lucide]
 >
