@@ -1,0 +1,14 @@
+package simpleicons
+
+templ Pi(attrs ...templ.Attributes) {
+	<svg
+		role="img"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<title>Pi</title><path d="M0 0v24h6v-6h6v-6H6V6h6v6h6V0Zm18 12v12h6V12Z"></path>
+	</svg>
+}
