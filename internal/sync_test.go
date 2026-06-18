@@ -109,17 +109,18 @@ func TestToHTML(t *testing.T) {
 `
 	want := `{{ define "my-icon" }}
 <svg
-  {{ range $value := . }}
-    {{ $value }}
-  {{ end }}
+	{{ range $value := . }}
+    	{{ $value }}
+  	{{ end }}
 >
-  <g></g>
+<g></g>
 </svg>
-{{ end }}`
+{{ end }}
+`
 
 	tmp := t.TempDir()
 
-	err := internal.ToHTML("my-icon", test, tmp)
+	err := internal.ToHTML("my-icon", []byte(test), tmp)
 	if err != nil {
 		t.Fatalf("failed to write html icon: %v", err)
 	}
@@ -148,12 +149,12 @@ templ MyIcon(attrs ...templ.Attributes) {
 		}
 	>
 		<g></g>
-</svg>
+	</svg>
 }`
 
 	tmp := t.TempDir()
 
-	err := internal.ToTempl("lucide", "my-icon", test, tmp)
+	err := internal.ToTempl("lucide", "my-icon", []byte(test), tmp)
 	if err != nil {
 		t.Fatalf("failed to write templ icon: %v", err)
 	}
