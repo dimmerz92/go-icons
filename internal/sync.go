@@ -79,7 +79,7 @@ func NonAlphaPrefixer(v string) string {
 func ToHTML(name string, svg []byte, outputPath string) error {
 	comment, attrs, inner, err := parseSVG(svg)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("parse svg: %w", err)
 	}
 
 	var b strings.Builder
@@ -108,7 +108,7 @@ func ToHTML(name string, svg []byte, outputPath string) error {
 func ToTempl(library, name string, svg []byte, outputPath string) error {
 	comment, attrs, inner, err := parseSVG(svg)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("parse svg: %w", err)
 	}
 
 	fname, err := KebabToPascal(NonAlphaPrefixer(name))
@@ -117,19 +117,24 @@ func ToTempl(library, name string, svg []byte, outputPath string) error {
 	}
 
 	var b strings.Builder
-	fmt.Fprintf(&b, "package %s\n\n", library)
+	fmt.Fprintf(&b, "package %s\n\n", strings.ReplaceAll(library, "-", ""))
 	if comment != "" {
 		for line := range strings.SplitSeq(comment, "\n") {
 			b.WriteString("// " + line + "\n")
 		}
 	}
-	fmt.Fprintf(&b, "templ %s(attrs templ.Attributes) {\n\t<svg", fname)
+	fmt.Fprintf(&b, "templ %s(attrs ...templ.Attributes) {\n\t<svg", fname)
 
 	for _, a := range attrs {
-		fmt.Fprintf(&b, " %s=\"%s\"", a.Name.Local, escapeAttr(a.Value))
+		switch {
+		case a.Name.Space == "xmlns" && a.Name.Local != "":
+			fmt.Fprintf(&b, " %s:%s=\"%s\"", a.Name.Space, a.Name.Local, escapeAttr(a.Value))
+		default:
+			fmt.Fprintf(&b, " %s=\"%s\"", a.Name.Local, escapeAttr(a.Value))
+		}
 	}
 
-	b.WriteString("\n\t\tif len(attrs) > 0 {\n\t\t\t{ attrs... }\n\t\t}\n\t>\n\t\t")
+	b.WriteString("\n\t\tif len(attrs) > 0 {\n\t\t\t{ attrs[0]... }\n\t\t}\n\t>\n\t\t")
 	b.WriteString(strings.TrimSpace(inner))
 	b.WriteString("\n\t</svg>\n}\n")
 
