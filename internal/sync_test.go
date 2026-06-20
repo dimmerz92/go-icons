@@ -1,10 +1,13 @@
 package internal_test
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
+	"unicode"
 
 	"github.com/dimmerz92/go-icons/internal"
 )
@@ -109,17 +112,18 @@ func TestToHTML(t *testing.T) {
 `
 	want := `{{ define "my-icon" }}
 <svg
-  {{ range $value := . }}
-    {{ $value }}
-  {{ end }}
+	{{ range $value := . }}
+    	{{ $value }}
+  	{{ end }}
 >
-  <g></g>
+<g></g>
 </svg>
-{{ end }}`
+{{ end }}
+`
 
 	tmp := t.TempDir()
 
-	err := internal.ToHTML("my-icon", test, tmp)
+	err := internal.ToHTML("my-icon", []byte(test), tmp)
 	if err != nil {
 		t.Fatalf("failed to write html icon: %v", err)
 	}
@@ -129,7 +133,10 @@ func TestToHTML(t *testing.T) {
 		t.Fatalf("failed to read html icon: %v", err)
 	}
 
-	if string(got) != want {
+	gotStripped := stripWhitespace(t, string(got))
+	wantStripped := stripWhitespace(t, want)
+
+	if gotStripped != wantStripped {
 		t.Fatalf("wanted\n%s\n\ngot\n%s", want, string(got))
 	}
 }
@@ -148,12 +155,12 @@ templ MyIcon(attrs ...templ.Attributes) {
 		}
 	>
 		<g></g>
-</svg>
+	</svg>
 }`
 
 	tmp := t.TempDir()
 
-	err := internal.ToTempl("lucide", "my-icon", test, tmp)
+	err := internal.ToTempl("lucide", "my-icon", []byte(test), tmp)
 	if err != nil {
 		t.Fatalf("failed to write templ icon: %v", err)
 	}
@@ -163,7 +170,10 @@ templ MyIcon(attrs ...templ.Attributes) {
 		t.Fatalf("failed to read templ icon: %v", err)
 	}
 
-	if string(got) != want {
+	gotStripped := stripWhitespace(t, string(got))
+	wantStripped := stripWhitespace(t, want)
+
+	if gotStripped != wantStripped {
 		t.Fatalf("wanted\n%s\n\ngot\n%s", want, string(got))
 	}
 }
@@ -187,4 +197,21 @@ func TestNonAlphaPrefixer(t *testing.T) {
 			}
 		})
 	}
+}
+
+// stripWhitespace is a test helper that removes all whitespace characters from a string, leaving only the inherent
+// structure. Can be used to strip all whitespace where whitespace is not important to the end result (i.e., provides
+// formatting for humans only).
+func stripWhitespace(t testing.TB, input string) string {
+	t.Helper()
+
+	// Remove all characters that are classified as whitespace.
+	output := strings.Map(func(r rune) rune {
+		if unicode.IsSpace(r) {
+			return -1
+		}
+		return r
+	}, input)
+
+	return fmt.Sprintf("%q", output)
 }

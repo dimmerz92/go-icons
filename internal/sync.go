@@ -1,7 +1,10 @@
 package internal
 
 import (
+	"bytes"
+	"encoding/xml"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,26 +13,6 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
-
-const HTML_TEMPLATE = `{{ define "%s" }}
-%s
-  {{ range $value := . }}
-    {{ $value }}
-  {{ end }}
->
-  %s
-{{ end }}`
-
-const TEMPL_TEMPLATE = `package %s
-
-templ %s(attrs ...templ.Attributes) {
-	%s
-		if len(attrs) > 0 {
-			{ attrs[0]... }
-		}
-	>
-		%s
-}`
 
 // FileSet returns a set of names of files of type 'ext' from the specified 'path' with 'ext' trimmed.
 func FileSet(path, ext string) map[string]struct{} {
@@ -93,24 +76,39 @@ func NonAlphaPrefixer(v string) string {
 }
 
 // ToHTML embeds the 'svg' into a html template and saves it as 'name' to the 'outputPath'.
-func ToHTML(name, svg, outputPath string) error {
-	svgParts := strings.SplitN(svg, ">", 2)
-	if len(svgParts) != 2 {
-		return fmt.Errorf("malformed svg file")
+func ToHTML(name string, svg []byte, outputPath string) error {
+	comment, attrs, inner, err := parseSVG(svg)
+	if err != nil {
+		return fmt.Errorf("parse svg: %w", err)
 	}
 
-	template := fmt.Appendf([]byte{}, HTML_TEMPLATE,
-		name, strings.TrimSpace(svgParts[0]), strings.TrimSpace(svgParts[1]),
-	)
+	var b strings.Builder
+	fmt.Fprintf(&b, "{{ define \"%s\" }}\n", name)
+	if comment != "" {
+		fmt.Fprintf(&b, "<!--\n%s\n-->\n", comment)
+	}
+	b.WriteString("<svg")
 
-	return os.WriteFile(filepath.Join(outputPath, name+".html"), template, 0600)
+	for _, a := range attrs {
+		fmt.Fprintf(&b, " %s=\"%s\"", a.Name.Local, escapeAttr(a.Value))
+	}
+
+	b.WriteString("\n\t{{ range $value := . }}\n")
+	b.WriteString("\t\t{{ $value }}\n")
+	b.WriteString("\t{{ end }}\n")
+	b.WriteString(">\n\t")
+	b.WriteString(strings.TrimSpace(inner))
+	b.WriteString("\n</svg>\n")
+	b.WriteString("{{ end }}\n")
+
+	return os.WriteFile(filepath.Join(outputPath, name+".html"), []byte(b.String()), 0644)
 }
 
 // ToTempl embeds the 'svg' into a templ template and saves it as 'name' to the 'outputPath'.
-func ToTempl(library, name, svg, outputPath string) error {
-	svgParts := strings.SplitN(svg, ">", 2)
-	if len(svgParts) != 2 {
-		return fmt.Errorf("malformed svg file")
+func ToTempl(library, name string, svg []byte, outputPath string) error {
+	comment, attrs, inner, err := parseSVG(svg)
+	if err != nil {
+		return fmt.Errorf("parse svg: %w", err)
 	}
 
 	fname, err := KebabToPascal(NonAlphaPrefixer(name))
@@ -118,9 +116,77 @@ func ToTempl(library, name, svg, outputPath string) error {
 		return err
 	}
 
-	template := fmt.Appendf([]byte{}, TEMPL_TEMPLATE,
-		strings.ReplaceAll(library, "-", ""), fname, strings.TrimSpace(svgParts[0]), strings.TrimSpace(svgParts[1]),
-	)
+	var b strings.Builder
+	fmt.Fprintf(&b, "package %s\n\n", strings.ReplaceAll(library, "-", ""))
+	if comment != "" {
+		for line := range strings.SplitSeq(comment, "\n") {
+			b.WriteString("// " + line + "\n")
+		}
+	}
+	fmt.Fprintf(&b, "templ %s(attrs ...templ.Attributes) {\n\t<svg", fname)
 
-	return os.WriteFile(filepath.Join(outputPath, name+".templ"), template, 0600)
+	for _, a := range attrs {
+		switch {
+		case a.Name.Space == "xmlns" && a.Name.Local != "":
+			fmt.Fprintf(&b, " %s:%s=\"%s\"", a.Name.Space, a.Name.Local, escapeAttr(a.Value))
+		default:
+			fmt.Fprintf(&b, " %s=\"%s\"", a.Name.Local, escapeAttr(a.Value))
+		}
+	}
+
+	b.WriteString("\n\t\tif len(attrs) > 0 {\n\t\t\t{ attrs[0]... }\n\t\t}\n\t>\n\t\t")
+	b.WriteString(strings.TrimSpace(inner))
+	b.WriteString("\n\t</svg>\n}\n")
+
+	return os.WriteFile(filepath.Join(outputPath, name+".templ"), []byte(b.String()), 0644)
+}
+
+func escapeAttr(s string) string {
+	var b strings.Builder
+	xml.EscapeText(&b, []byte(s)) // re-escape, since Unmarshal already decoded entities
+	return b.String()
+}
+
+func parseSVG(data []byte) (comment string, attrs []xml.Attr, inner string, err error) {
+	dec := xml.NewDecoder(bytes.NewReader(data))
+	var comments []string
+
+	for {
+		tok, terr := dec.Token()
+		if terr != nil {
+			if terr == io.EOF {
+				err = fmt.Errorf("no root element found")
+			} else {
+				err = terr
+			}
+			return
+		}
+
+		switch t := tok.(type) {
+		case xml.Comment:
+			// t is []byte containing just the text between <!-- and -->
+			comments = append(comments, strings.TrimSpace(string(t)))
+
+		case xml.StartElement:
+			if t.Name.Local != "svg" {
+				err = fmt.Errorf("root element is <%s>, not <svg>", t.Name.Local)
+				return
+			}
+			attrs = t.Attr
+			comment = strings.Join(comments, "\n")
+
+			// hand the already-consumed start element to DecodeElement
+			// so it can grab the rest (children) as raw innerxml
+			var body struct {
+				Inner string `xml:",innerxml"`
+			}
+			if derr := dec.DecodeElement(&body, &t); derr != nil {
+				err = derr
+				return
+			}
+			inner = body.Inner
+			return
+		}
+		// xml.ProcInst, xml.Directive, xml.CharData (whitespace): ignore
+	}
 }

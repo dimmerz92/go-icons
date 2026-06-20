@@ -45,14 +45,14 @@ func main() {
 		}
 
 		if inHtml {
-			err = internal.ToHTML(svg, string(file), paths[1])
+			err = internal.ToHTML(svg, file, paths[1])
 			if err != nil {
 				panic(err)
 			}
 		}
 
 		if inTempl {
-			err = internal.ToTempl(library, svg, string(file), paths[1])
+			err = internal.ToTempl(library, svg, file, paths[1])
 			if err != nil {
 				panic(err)
 			}
