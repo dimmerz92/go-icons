@@ -1,0 +1,29 @@
+package tabler
+
+// tags: [filter, discount, sort, organize, arrange, select, refine, sieve, screen, sale]
+// category: System
+// version: "3.32"
+// unicode: "1015a"
+templ Filter2Discount(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M4 6h16"></path>
+		<path d="M6 12h12"></path>
+		<path d="M9 18h3"></path>
+		<path d="M16 16v.01"></path>
+		<path d="M16 21l5 -5"></path>
+		<path d="M21 21v.01"></path>
+	</svg>
+}
