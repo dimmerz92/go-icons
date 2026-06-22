@@ -58,15 +58,15 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           go install github.com/a-h/templ/cmd/templ@latest
-          go run ./cmd/sync/main.go tabler
+          for variant in "outline filled"; do
+            go run ./cmd/sync/main.go ${variant}
+            t empl fmt ${variant}
+          done
           rm -rf ./tabler-repo
-          templ fmt tabler
           templ generate
-          git add .
-          TAG=$(curl -s https://api.github.com/repos/tabler/tabler-icons/releases/latest | jq -r '.tag_name')
-          CLEAN_TAG=$(echo $TAG | sed 's/[^0-9.]//g')
-          CLEAN_TAG=$(echo "${{ needs.tabler-check.outputs.tag }}" | sed 's/[^0-9.]//g')
+          CLEAN_TAG=$(echo "${{ needs.tabler-check.outputs.tag }}" | sed `s\[^0-9.]//g`)
           jq --arg v "$CLEAN_TAG" '.tabler = $v' versions.json > tmp.json && mv tmp.json versions.json
+          git add .
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "ci: sync with tabler icons repo"
             echo "changes=true" >> $GITHUB_OUTPUT
