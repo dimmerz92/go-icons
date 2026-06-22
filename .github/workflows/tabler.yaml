@@ -60,7 +60,7 @@ jobs:
           go install github.com/a-h/templ/cmd/templ@latest
           for variant in "outline filled"; do
             go run ./cmd/sync/main.go ${variant}
-            t empl fmt ${variant}
+            templ fmt ${variant}
           done
           rm -rf ./tabler-repo
           templ generate
