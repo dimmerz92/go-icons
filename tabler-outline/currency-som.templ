@@ -1,0 +1,25 @@
+package tableroutline
+
+// tags: [exchange, finance, money, cash, kyrgyzstan, currency, som, payment, monetary, banking]
+// category: Currencies
+// version: "1.90"
+// unicode: "f37c"
+templ CurrencySom(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M10 18v-12h-5v10a2 2 0 0 1 -2 2"></path>
+		<path d="M14 6v12h4a3 3 0 0 0 0 -6h-4h4a3 3 0 0 0 0 -6h-4"></path>
+	</svg>
+}

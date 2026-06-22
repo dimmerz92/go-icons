@@ -1,0 +1,24 @@
+package tableroutline
+
+// tags: [music, song, playlist, melody, device, voice, recorder, dictation, machine, player]
+// category: Media
+// version: "1.28"
+// unicode: "ed47"
+templ PlayerRecord(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M5 12a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+	</svg>
+}

@@ -1,0 +1,30 @@
+package tableroutline
+
+// tags: [computer, monitor, keyboard, devices, off, hardware, technology, disabled, inactive, pc]
+// category: Devices
+// version: "1.65"
+// unicode: "f113"
+templ DevicesPcOff(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M9 9v10h-6v-14h2"></path>
+		<path d="M13 9h9v7h-2m-4 0h-4v-4"></path>
+		<path d="M14 19h5"></path>
+		<path d="M17 17v2"></path>
+		<path d="M6 13v.01"></path>
+		<path d="M6 16v.01"></path>
+		<path d="M3 3l18 18"></path>
+	</svg>
+}
