@@ -117,13 +117,13 @@ Pick a variant to install:
 *Filled*
 
 ```bash
-go get github.com/dimmerz92/go-icons/tablerfilled@latest
+go get github.com/dimmerz92/go-icons/tabler-filled@latest
 ```
 
 *Outline*
 
 ```bash
-go get github.com/dimmerz92/go-icons/tableroutline@latest
+go get github.com/dimmerz92/go-icons/tabler-outline@latest
 ```
 
 **Usage**
