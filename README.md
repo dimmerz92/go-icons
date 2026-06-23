@@ -13,6 +13,7 @@ Simply use the command line utility to install individual icons into your projec
 | [Material Icons](https://github.com/mui/material-ui) | ![Material Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.material&style=flat-square&label=) | [MIT](https://github.com/mui/material-ui/blob/master/LICENSE) |
 | [Radix Icons](https://github.com/radix-ui/icons) | ![Radix Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.radix&style=flat-square&label=) | [MIT](https://github.com/radix-ui/icons/blob/main/LICENSE) |
 | [Simple Icons](https://github.com/simple-icons/simple-icons) | ![Simple Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.simpleIcons&style=flat-square&label=) | [CC0 1.0](https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md) |
+| [Tabler Icons](https://github.com/tabler/tabler-icons) | ![Tabler Icons version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdimmerz92%2Fgo-icons%2Frefs%2Fheads%2Fmaster%2Fversions.json&query=%24.tabler&style=flat-square&label=) | [MIT](https://github.com/tabler/tabler-icons/blob/main/LICENSE) |
 
 ## Installation & Usage
 
@@ -107,6 +108,45 @@ go get github.com/dimmerz92/go-icons/simple-icons@latest
 @simpleicons.T1001trackLists(templ.Attributes{}) // templ.Attributes argument
 ```
 
+#### Tabler Icons
+
+**Install**
+
+Pick a variant to install:
+
+*Filled*
+
+```bash
+go get github.com/dimmerz92/go-icons/tablerfilled@latest
+```
+
+*Outline*
+
+```bash
+go get github.com/dimmerz92/go-icons/tableroutline@latest
+```
+
+**Usage**
+
+```templ
+// Filled
+@tablerfilled.AlertCircle() // no argument
+@tablerfilled.AlertCircle(templ.Attributes{}) // templ.Attributes argument
+// Outline
+@tableroutline.AlertCircle() // no argument
+@tableroutline.AlertCircle(templ.Attributes{}) // templ.Attributes argument
+```
+
+If you are only using one variant, you might find it easier to alias your import. i.e.,
+
+```templ
+...
+import tabler "github.com/dimmerz92/go-icons/tabler-outline"
+...
+@tabler.AlertCircle() // no argument
+@tabler.AlertCircle(templ.Attributes{}) // templ.Attributes argument
+```
+
 ### Command Line Utility
 
 **Install**
@@ -120,7 +160,7 @@ go install github.com/dimmerz92/go-icons/cmd/go-icons@latest
 > [!NOTE]
 > The command follows a simple model of `go-icons <LIBRARY>:<FORMAT> <ICON NAME> [OPTIONS]`
 >
-> LIBRARIES: [simple-icons radix-icons ionicons material lucide]
+> LIBRARIES: [simple-icons radix-icons ionicons material lucide tabler-filled tabler-outline]
 >
 > FORMATS: [html templ]
 >

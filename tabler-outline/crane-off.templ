@@ -1,0 +1,31 @@
+package tableroutline
+
+// tags: [construction, building, machine, lifting, crane, off, transport, travel, disabled, inactive]
+// category: Vehicles
+// version: "1.65"
+// unicode: "f109"
+templ CraneOff(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M6 21h6"></path>
+		<path d="M9 21v-12"></path>
+		<path d="M9 5v-2l-1 1"></path>
+		<path d="M6 6l-3 3h6"></path>
+		<path d="M13 9h8"></path>
+		<path d="M9 3l10 6"></path>
+		<path d="M17 9v4a2 2 0 0 1 2 2m-2 2a2 2 0 0 1 -2 -2"></path>
+		<path d="M3 3l18 18"></path>
+	</svg>
+}

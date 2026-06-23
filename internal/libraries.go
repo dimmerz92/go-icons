@@ -9,15 +9,19 @@ import (
 	"github.com/dimmerz92/go-icons/material"
 	radixicons "github.com/dimmerz92/go-icons/radix-icons"
 	simpleicons "github.com/dimmerz92/go-icons/simple-icons"
+	tablerfilled "github.com/dimmerz92/go-icons/tabler-filled"
+	tableroutline "github.com/dimmerz92/go-icons/tabler-outline"
 )
 
 // key=library, value[0]=icons path in cloned repo, value[1]=path in current repo
 var SupportedLibraries = map[string][]string{
-	"lucide":       {"./lucide-repo/icons", "./lucide"},
-	"simple-icons": {"./simple-icons-repo/icons", "./simple-icons"},
-	"radix-icons":  {"./radix-icons-repo/packages/radix-icons/icons", "./radix-icons"},
-	"ionicons":     {"./ionicons-repo/src/svg", "./ionicons"},
-	"material":     {"./material-repo/packages/mui-icons-material/material-icons", "./material"},
+	"lucide":         {"./lucide-repo/icons", "./lucide"},
+	"simple-icons":   {"./simple-icons-repo/icons", "./simple-icons"},
+	"radix-icons":    {"./radix-icons-repo/packages/radix-icons/icons", "./radix-icons"},
+	"ionicons":       {"./ionicons-repo/src/svg", "./ionicons"},
+	"material":       {"./material-repo/packages/mui-icons-material/material-icons", "./material"},
+	"tabler-outline": {"./tabler-repo/icons/outline", "./tabler-outline"},
+	"tabler-filled":  {"./tabler-repo/icons/filled", "./tabler-filled"},
 }
 
 var SupportedFormats = map[string]struct{}{
@@ -26,11 +30,13 @@ var SupportedFormats = map[string]struct{}{
 }
 
 var IconEmbeds = map[string]embed.FS{
-	"lucide":       lucide.Templates,
-	"simple-icons": simpleicons.Templates,
-	"radix-icons":  radixicons.Templates,
-	"ionicons":     ionicons.Templates,
-	"material":     material.Templates,
+	"lucide":         lucide.Templates,
+	"simple-icons":   simpleicons.Templates,
+	"radix-icons":    radixicons.Templates,
+	"ionicons":       ionicons.Templates,
+	"material":       material.Templates,
+	"tabler-outline": tableroutline.Templates,
+	"tabler-filled":  tablerfilled.Templates,
 }
 
 // GetHTMLFile returns the contents of the given html icon file.
