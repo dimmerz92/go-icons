@@ -64,7 +64,7 @@ jobs:
           done
           rm -rf ./tabler-repo
           templ generate
-          CLEAN_TAG=$(echo "${{ needs.tabler-check.outputs.tag }}" | sed 's\[^0-9.]//g')
+          CLEAN_TAG=$(echo "${{ needs.tabler-check.outputs.tag }}" | sed 's/[^0-9.]//g')
           jq --arg v "$CLEAN_TAG" '.tabler = $v' versions.json > tmp.json && mv tmp.json versions.json
           git add .
           if [ -n "$(git status --porcelain)" ]; then
