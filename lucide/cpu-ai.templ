@@ -1,0 +1,35 @@
+package lucide
+
+templ CpuAi(attrs ...templ.Attributes) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		if len(attrs) > 0 {
+			{ attrs[0]... }
+		}
+	>
+		<path d="M12 20v2"></path>
+		<path d="M12 2v2"></path>
+		<path d="M16 9v6"></path>
+		<path d="M17 20v2"></path>
+		<path d="M17 2v2"></path>
+		<path d="M2 12h2"></path>
+		<path d="M2 17h2"></path>
+		<path d="M2 7h2"></path>
+		<path d="M20 12h2"></path>
+		<path d="M20 17h2"></path>
+		<path d="M20 7h2"></path>
+		<path d="M7 20v2"></path>
+		<path d="M7 2v2"></path>
+		<path d="M8 13h4"></path>
+		<path d="M8 15v-4a2 2 0 014 0v4"></path>
+		<rect x="4" y="4" width="16" height="16" rx="2"></rect>
+	</svg>
+}
